@@ -5,12 +5,13 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { taskApi } from "./lib/api";
-import { User } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "./components/ui/button";
 import "./App.css";
 
 function TaskApp() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [setTasks] = useState<Task[]>([]);
   const [setIsLoading] = useState(false);
   const [setCurrentPage] = useState(1);
@@ -47,6 +48,15 @@ function TaskApp() {
     }
   }, [user]);
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success("Logged out successfully");
+    } catch (error) {
+      toast.error("Failed to logout");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container max-w-6xl mx-auto py-8 px-4">
@@ -64,6 +74,11 @@ function TaskApp() {
                 <User className="size-4" />
                 <span>{user?.name}</span>
               </div>
+
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="size-4 mr-2" />
+                Logout
+              </Button>
             </div>
           </div>
         </div>
